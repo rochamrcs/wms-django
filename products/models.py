@@ -12,7 +12,7 @@ class ProductType(models.TextChoices):
     MATERIAL_ACABADO = "4", "Material Acabado"
 
 class Product(models.Model):
-    product_code = models.CharField(max_length=20, blank=False, null=False)
+    product_code = models.CharField(max_length=20, blank=False, null=False, unique=True)
     name = models.CharField(max_length=100, blank=False, null=False)
     umb = models.CharField(max_length=2, choices=BasicUnitMeasure, default=BasicUnitMeasure.UNIDADE)
     quantity = models.PositiveIntegerField(default=0)
