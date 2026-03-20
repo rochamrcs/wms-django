@@ -10,6 +10,12 @@
     <h1>Produtos</h1>
     <a href="{% url 'products:new_product' %}">Cadastrar um novo produto</a>
 
+    <form method="GET">
+        <div>
+            <input type="text" name="q" placeholder="Buscar produtos..." value="{{ request.GET.q }}">
+            <button type="submit">Buscar</button>
+        </div>
+    </form>
         {% block content %}
 
         {% endblock %}
