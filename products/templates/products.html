@@ -2,12 +2,31 @@
 
 {% block content %}
 
+<table border="1">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Nome do produto</th>
+      <th>UMB</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
     {% for product in products_list %}
-
-        <p>{{product.product_code}}</p>
-        <p>{{product.name}}</p>
-        <p>{{product.umb}}</p>
-    
+        <tr>
+            <td>{{product.product_code}}</td>
+            <td>{{product.name}}</td>
+            <td>{{product.umb}}</td>
+            <td>
+                {% if product.status %}
+                    Ativo
+                {% else %}
+                    Inativo
+                {% endif %}
+            </td>
+        </tr>
     {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
