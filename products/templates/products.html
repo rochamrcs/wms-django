@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
+ {% block page_title %}Produtos{% endblock %}
+ {% block page_description %}Gerenciamento de cadastro de produtos{% endblock %}
+
 {% block content %}
 
      <!-- Page header -->
       <div class="flex items-center justify-between mb-6">
-        <div>
+        <!-- <div>
           <h2 class="text-xl font-bold text-gray-800">Produtos</h2>
           <p class="text-sm text-gray-500 mt-0.5">{{ products_list|length }} produtos cadastrados</p>
-        </div>
+        </div> -->
         <a href="{% url 'products:new_product' %}"
            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition shadow-sm">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -18,20 +21,24 @@
       </div>
 
       <!-- Search bar -->
-      <div class="glass rounded-xl border border-gray-200 px-4 py-3 mb-4 flex items-center gap-3">
-        <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
-        </svg>
-        <input type="text" id="search-input"
-               placeholder="Buscar por SKU ou nome..."
-               class="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400">
-        <select id="status-filter"
-                class="text-sm text-gray-600 bg-transparent outline-none border-l border-gray-200 pl-3 cursor-pointer">
-          <option value="">Todos os status</option>
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-        </select>
-      </div>
+      <form method="GET" class="mb-4">
+        <div class="glass rounded-xl border border-gray-200 px-4 py-3 mb-4 flex items-center gap-3">
+          <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
+          </svg>
+          <input type="text" id="search-input"
+                placeholder="Buscar por SKU ou nome..."
+                name="q"
+                value="{{ request.GET.q }}"
+                class="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400">
+          <select id="status-filter"
+                  class="text-sm text-gray-600 bg-transparent outline-none border-l border-gray-200 pl-3 cursor-pointer">
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+      </form>
 
       <!-- Table -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
