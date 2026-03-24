@@ -1,13 +1,25 @@
 from django.shortcuts import redirect, render
 from products.models import Product
 from products.forms import ProductForm
+from django.db.models import Q
 
 def products(request):
     search = request.GET.get('q')
+    filter_status = request.GET.get('status')
+
     products_list = Product.objects.all()
 
     if search:
-        products_list = Product.objects.filter(name__icontains=search)
+        products_list = products_list.filter(
+            Q(name__icontains=search) |
+            Q(product_code__icontains=search)
+        )
+
+    if filter_status == "ativo":
+        products_list = products_list.filter(status=True)
+
+    elif filter_status == "inativo":
+        products_list = products_list.filter(status=False)
 
     return render(request, 'products.html', {"products_list": products_list})
 
