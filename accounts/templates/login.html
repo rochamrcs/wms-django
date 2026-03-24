@@ -68,6 +68,12 @@
             placeholder="seu@email.com"
             class="w-full mt-2 p-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500 outline-none"
             >
+            
+            {% if login_form.username.errors %}
+              <p class="text-xs text-red-500 mt-1">
+                {{ login_form.username.errors.0 }}
+              </p>
+            {% endif %}
         </div>
 
         <!-- Senha -->
@@ -83,8 +89,18 @@
             placeholder="••••••••"
             class="w-full mt-2 p-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500 outline-none"
             >
+            {% if login_form.password.errors %}
+              <p class="text-xs text-red-500 mt-1">
+                {{ login_form.password.errors.0 }}
+              </p>
+            {% endif %}
         </div>
-
+        
+            {% if login_form.non_field_errors %}
+              <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+                {{ login_form.non_field_errors.0 }}
+              </div>
+            {% endif %}
         <!-- Botão -->
         <button 
             type="submit"
