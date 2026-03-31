@@ -3,13 +3,19 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 
 def login_view(request):
+
+    next_url = request.GET.get('next')
+
     if request.method == 'POST':
         login_form = AuthenticationForm(request, data=request.POST)
 
         if login_form.is_valid():
             user = login_form.get_user()
             login(request, user)
-            return redirect('home')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect("home")
     else:
         login_form = AuthenticationForm()
 
