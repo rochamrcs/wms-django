@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from products.models import Product
 from products.forms import ProductForm
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='accounts:login_form')
