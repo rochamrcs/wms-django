@@ -30,7 +30,6 @@ def products(request):
 def new_product(request):
     if request.method == 'POST':
         new_product_form = ProductForm(request.POST)
-        print(new_product_form)
 
         if new_product_form.is_valid():
             new_product_form.save()
