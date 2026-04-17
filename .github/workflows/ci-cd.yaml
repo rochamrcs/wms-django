@@ -48,9 +48,9 @@ jobs:
 
     - name: Configurar variáveis de ambiente
       run: |
-        echo "DATABASE_URL=postgresql://testuser:testpass@localhost:5432/testdb" >> $GITHUB_ENV
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
-        echo "DEBUG=True" >> $GITHUB_ENV
+        echo DATABASE_URL=postgresql://testuser:testpass@localhost:5432/testdb >> $GITHUB_ENV
+        echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> $GITHUB_ENV
+        echo DEBUG=True >> $GITHUB_ENV
 
     - name: Rodar migrações
       run: python manage.py migrate
