@@ -121,7 +121,12 @@
 
         <td class="px-5 py-4 text-right">
           <div class="flex items-center justify-end gap-2">
-            <button class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center text-gray-500 transition">
+            <button
+                onclick="openModal(this)"
+                data-id="{{ product.id }}"
+                data-name="{{ product.name }}"
+                data-status="{{ product.status|yesno:'true,false' }}"
+                class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center text-gray-500 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6.293-6.293a1 1 0 011.414 0l2.586 2.586a1 1 0 010 1.414L13 15H9v-4z"/>
               </svg>
@@ -148,5 +153,151 @@
     </tbody>
   </table>
 </div>
+
+
+<div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/50">
+
+  <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
+    
+    <h2 class="text-lg font-semibold mb-4">Alterar Status</h2>
+
+    <p id="modal-product-name" class="mb-4 text-gray-700"></p>
+
+    <div class="flex items-center gap-3 mb-4">
+
+      <!-- Toggle -->
+      <button id="status-toggle" class="relative w-14 h-8 rounded-full transition duration-300">
+        <span id="toggle-circle"
+              class="absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow transition duration-300">
+        </span>
+      </button>
+
+      <!-- Texto -->
+      <span id="status-label" class="text-sm font-semibold leading-none"></span>
+
+    </div>
+        
+
+    <div class="flex justify-end gap-2">
+      <button onclick="closeModal()" class="px-4 py-2 text-sm bg-gray-100 rounded-lg">
+        Cancelar
+      </button>
+
+      <button id="save-btn" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg">
+        Salvar
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentStatus = false
+let currentProductId = null
+
+const modal = document.getElementById('modal')
+const productNameEl = document.getElementById('modal-product-name')
+const toggleBtn = document.getElementById('status-toggle')
+
+// CSRF token (Django)
+function getCSRFToken() {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith('csrftoken'))
+    ?.split('=')[1]
+}
+
+// Atualiza UI do toggle
+function renderToggle() {
+  const circle = document.getElementById('toggle-circle')
+  const label = document.getElementById('status-label')
+
+  if (currentStatus) {
+    // Fundo
+    toggleBtn.classList.remove('bg-gray-300')
+    toggleBtn.classList.add('bg-green-500')
+
+    // Bolinha
+    circle.classList.add('translate-x-6')
+
+    // Texto
+    label.innerText = 'Ativo'
+    label.classList.remove('text-gray-600')
+    label.classList.add('text-green-700')
+
+  } else {
+    // Fundo
+    toggleBtn.classList.remove('bg-green-500')
+    toggleBtn.classList.add('bg-gray-300')
+
+    // Bolinha
+    circle.classList.remove('translate-x-6')
+
+    // Texto
+    label.innerText = 'Inativo'
+    label.classList.remove('text-green-700')
+    label.classList.add('text-gray-600')
+  }
+}
+
+// Abrir modal
+function openModal(button) {
+  const name = button.getAttribute('data-name')
+  const status = button.getAttribute('data-status')
+  const id = button.getAttribute('data-id')
+
+  currentStatus = status === 'true'
+  currentProductId = id
+
+  productNameEl.innerText = name
+
+  renderToggle()
+
+  modal.classList.remove('hidden')
+  modal.classList.add('flex')
+}
+
+// fechar modal
+function closeModal() {
+  modal.classList.add('hidden')
+  modal.classList.remove('flex')
+}
+
+// Toggle
+toggleBtn.addEventListener('click', () => {
+  currentStatus = !currentStatus
+  renderToggle()
+})
+
+// Salvar no backend
+document.getElementById('save-btn').addEventListener('click', () => {
+
+  fetch(`/products/${currentProductId}/change_status/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCSRFToken()
+    },
+    body: JSON.stringify({
+      status: currentStatus
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Erro ao salvar')
+    }
+    return response.json()
+  })
+  .then(() => {
+    closeModal()
+    location.reload()
+  })
+  .catch(error => {
+    console.error(error)
+    alert('Erro ao salvar status')
+  })
+
+})
+</script>
 
 {% endblock %}

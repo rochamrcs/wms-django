@@ -134,3 +134,56 @@ class ProductsPageTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'error')
+
+    
+    def test_change_status_route_return_status_code_302_and_redirects(self):
+        self.client.login(username='testuser', password='testpassword')
+
+        product = Product.objects.create(name='Produto Status', product_code='PS001', status=True, product_type='1')
+
+        response = self.client.post(f'/products/{product.id}/change_status/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/products/')
+
+
+    def test_change_status_was_toggled(self):
+        self.client.login(username='testuser', password='testpassword')
+
+        product = Product.objects.create(name='Produto Status', product_code='PS001', status=True, product_type='1')
+
+        response = self.client.post(f'/products/{product.id}/change_status/')
+
+        product.refresh_from_db()
+
+        self.assertFalse(product.status)
+
+    
+    def test_change_status_return_404_invalid_product(self):
+        self.client.login(username='testuser', password='testpassword')
+
+        response = self.client.post(f'/products/{99}/change_status/')
+
+        self.assertEqual(response.status_code, 404)
+
+
+    def test_change_status_page_redirects_for_unauthenticated_user(self):
+
+        login_url = reverse('accounts:login_form')
+
+        product = Product.objects.create(name='Produto Status', product_code='PS001', status=True, product_type='1')
+
+        response = self.client.post(f'/products/{product.id}/change_status/')
+
+        self.assertRedirects(response, f'{login_url}?next=/products/{product.id}/change_status/')
+
+
+    def test_change_status_redirects_when_method_is_not_post(self):
+
+        self.client.login(username='testuser', password='testpassword')
+
+        product = Product.objects.create(name='Produto Status', product_code='PS001', status=True, product_type='1')
+
+        response = self.client.get(f'/products/{product.id}/change_status/')
+
+        self.assertRedirects(response, '/products/')
