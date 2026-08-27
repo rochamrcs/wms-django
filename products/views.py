@@ -25,7 +25,10 @@ def products(request):
     elif filter_status == "inativo":
         products_list = products_list.filter(status=False)
 
-    return render(request, 'products.html', {"products_list": products_list})
+    return render(request, 'products.html', {
+        "products_list": products_list,
+        "new_product": ProductForm(),
+    })
 
 
 @login_required(login_url='accounts:login_form')
@@ -38,7 +41,10 @@ def new_product(request):
             return redirect('products:products')
     else:
         new_product_form = ProductForm()
-    return render(request, 'new_product.html', {'new_product': new_product_form})
+    return render(request, 'new_product.html', {
+        'new_product': new_product_form,
+        'modal_open': True,
+    })
 
 
 @login_required(login_url='accounts:login_form')
