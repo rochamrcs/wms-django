@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block page_title %}Posições{% endblock %}
+{% block page_description %}Gerenciamento das posições de armazenagem{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h2 class="text-xl font-bold text-gray-800">Posições cadastradas</h2>
+    <p class="text-sm text-gray-500 mt-1">Consulte a capacidade e o status de cada posição.</p>
+  </div>
+</div>
+
+<form method="GET" class="mb-4">
+  <div class="glass rounded-xl border border-gray-200 px-4 py-3 grid grid-cols-1 md:grid-cols-4 gap-3">
+    <div class="md:col-span-1 flex items-center gap-3 border-b md:border-b-0 md:border-r border-gray-200 pb-3 md:pb-0 md:pr-3">
+      <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
+      </svg>
+      <input type="search" name="q" placeholder="Buscar posição..." value="{{ request.GET.q }}" class="w-full bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400">
+    </div>
+
+    <select name="plant" class="w-full text-sm text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500" onchange="this.form.submit()">
+      <option value="">Todas as plantas</option>
+      {% for plant in plants %}
+        <option value="{{ plant.id }}" {% if request.GET.plant == plant.id|stringformat:'s' %}selected{% endif %}>{{ plant.name }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="storage" class="w-full text-sm text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500" onchange="this.form.submit()">
+      <option value="">Todos os armazéns</option>
+      {% for storage in storages %}
+        <option value="{{ storage.id }}" {% if request.GET.storage == storage.id|stringformat:'s' %}selected{% endif %}>{{ storage.name }}{% if storage.plant %} · {{ storage.plant.name }}{% endif %}</option>
+      {% endfor %}
+    </select>
+
+    <select name="status" class="w-full text-sm text-gray-600 bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500" onchange="this.form.submit()">
+      <option value="">Todos os status</option>
+      {% for value, label in location_statuses %}
+        <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="sr-only">Buscar</button>
+</form>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[760px]">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 tracking-wider px-5 py-3">Posição</th>
+          <th class="text-left text-xs font-semibold text-gray-500 tracking-wider px-5 py-3">Armazém</th>
+          <th class="text-left text-xs font-semibold text-gray-500 tracking-wider px-5 py-3">Capacidade</th>
+          <th class="text-left text-xs font-semibold text-gray-500 tracking-wider px-5 py-3">UMB</th>
+          <th class="text-left text-xs font-semibold text-gray-500 tracking-wider px-5 py-3">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for location in locations_list %}
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-5 py-4 font-medium text-gray-800">{{ location.name }}</td>
+          <td class="px-5 py-4 text-gray-600">
+            {{ location.storage.name }}
+            <span class="block text-xs text-gray-400 mt-0.5">{{ location.storage.plant.name }}</span>
+          </td>
+          <td class="px-5 py-4 text-gray-600">{{ location.capacity }}</td>
+          <td class="px-5 py-4 text-gray-600">{{ location.get_capacity_unit_display }}</td>
+          <td class="px-5 py-4">
+            <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full
+              {% if location.status == 'AVAILABLE' %}text-green-700 bg-green-100{% elif location.status == 'BLOCKED' %}text-red-700 bg-red-100{% else %}text-amber-700 bg-amber-100{% endif %}">
+              <span class="w-1.5 h-1.5 rounded-full {% if location.status == 'AVAILABLE' %}bg-green-500{% elif location.status == 'BLOCKED' %}bg-red-500{% else %}bg-amber-500{% endif %}"></span>
+              {{ location.get_status_display }}
+            </span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-8 text-gray-400">Nenhuma posição encontrada</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
