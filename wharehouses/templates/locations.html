@@ -59,7 +59,7 @@
       <tbody class="divide-y divide-gray-100">
         {% for location in locations_list %}
         <tr class="hover:bg-gray-50 transition">
-          <td class="px-5 py-4 font-medium text-gray-800">{{ location.name }}</td>
+          <td class="px-5 py-4 font-medium text-gray-800">{{ location.address }}</td>
           <td class="px-5 py-4 text-gray-600">
             {{ location.storage.name }}
             <span class="block text-xs text-gray-400 mt-0.5">{{ location.storage.plant.name }}</span>

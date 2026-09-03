@@ -8,4 +8,4 @@ admin.site.register(Storage)
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ["name", "storage", "capacity", "capacity_unit", "location_type", "status"]
+    list_display = ["address", "storage", "capacity", "capacity_unit", "location_type", "status"]

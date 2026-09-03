@@ -6,7 +6,7 @@ from .models import Location, LocationStatus, Plant, Storage
 
 @login_required(login_url='accounts:login_form')
 def locations(request):
-	locations_list = Location.objects.select_related('storage__plant').order_by('name')
+	locations_list = Location.objects.select_related('storage__plant').order_by('address')
 
 	search = request.GET.get('q', '').strip()
 	plant_id = request.GET.get('plant', '')

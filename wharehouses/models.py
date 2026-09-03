@@ -40,7 +40,7 @@ class Storage(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=20, unique=True)
+    address = models.CharField(max_length=20, unique=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, related_name= "locations")
     capacity = models.DecimalField(max_digits=10, decimal_places=2)
     capacity_unit = models.CharField(max_length=2,choices=UnitOfMeasure.choices)
@@ -49,4 +49,4 @@ class Location(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.address}"
