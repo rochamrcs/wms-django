@@ -14,11 +14,11 @@ class LocationsPageTestCase(TestCase):
 		self.other_storage = Storage.objects.create(name='Armazem B', plant=self.other_plant)
 		location_type = LocationType.objects.create(name='Picking')
 		self.location = Location.objects.create(
-			name='A-01-01', storage=self.storage, capacity=10,
+			address='A-01-01', storage=self.storage, capacity=10,
 			capacity_unit=UnitOfMeasure.PALLET, location_type=location_type,
 		)
 		self.blocked_location = Location.objects.create(
-			name='B-02-02', storage=self.other_storage, capacity=20,
+			address='B-02-02', storage=self.other_storage, capacity=20,
 			capacity_unit=UnitOfMeasure.KILOGRAM, location_type=location_type,
 			status=LocationStatus.BLOCKED,
 		)
