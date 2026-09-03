@@ -14,7 +14,7 @@ def locations(request):
 	status = request.GET.get('status', '')
 
 	if search:
-		locations_list = locations_list.filter(name__icontains=search)
+		locations_list = locations_list.filter(address__icontains=search)
 	if plant_id:
 		locations_list = locations_list.filter(storage__plant_id=plant_id)
 	if storage_id:
