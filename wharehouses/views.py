@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from wharehouses.forms import LocationForm
 
 from .models import Location, LocationStatus, Plant, Storage
 
@@ -27,4 +28,21 @@ def locations(request):
 		'plants': Plant.objects.order_by('name'),
 		'storages': Storage.objects.select_related('plant').order_by('name'),
 		'location_statuses': LocationStatus.choices,
+	})
+
+
+@login_required(login_url='accounts:login_form')
+def new_location(request):
+	if request.method == 'POST':
+		new_location_form = LocationForm(request.POST)
+
+		if new_location_form.is_valid():
+			new_location_form.save()
+			return redirect('wharehouses:locations')
+
+	else:
+		new_location_form = LocationForm()
+	return render(request, 'new_locations.html', {
+		'new_location': new_location_form,
+		'modal_open': True,
 	})

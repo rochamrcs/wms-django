@@ -1,0 +1,77 @@
+<div id="create-location-modal"
+     class="fixed inset-0 z-40 {% if modal_open %}flex{% else %}hidden{% endif %} items-center justify-center bg-slate-900/50 p-4"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="create-location-title">
+  <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100">
+    <form method="POST" action="{% url 'wharehouses:new_location' %}">
+      {% csrf_token %}
+
+      <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
+        <div>
+          <h2 id="create-location-title" class="text-base font-bold text-gray-800">Novo Endereço</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Todos os campos são obrigatórios</p>
+        </div>
+        <button type="button" onclick="closeCreateLocationModal()"
+                class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition"
+                aria-label="Fechar">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      {% if new_location.errors %}
+        <div class="mx-6 mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+          <strong>Corrija os erros abaixo:</strong>
+        </div>
+      {% endif %}
+
+      <div class="px-6 py-6 space-y-5">
+        <div>
+          <label for="{{ new_location.address.id_for_label }}" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Endereço</label>
+          {{ new_location.address }}
+          {% if new_location.address.errors %}<p class="text-xs text-red-500 mt-1">{{ new_location.address.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+          <label for="{{ new_location.storage.id_for_label }}" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Armazém</label>
+          {{ new_location.storage }}
+          {% if new_location.storage.errors %}<p class="text-xs text-red-500 mt-1">{{ new_location.storage.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="{{ new_location.capacity.id_for_label }}" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Capacidade</label>
+            {{ new_location.capacity }}
+            {% if new_location.capacity.errors %}<p class="text-xs text-red-500 mt-1">{{ new_location.capacity.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label for="{{ new_location.capacity_unit.id_for_label }}" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Unidade de medida</label>
+            {{ new_location.capacity_unit }}
+            {% if new_location.capacity_unit.errors %}<p class="text-xs text-red-500 mt-1">{{ new_location.capacity_unit.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="{{ new_location.location_type.id_for_label }}" class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Tipo de Endereço</label>
+            {{ new_location.location_type }}
+            {% if new_location.location_type.errors %}<p class="text-xs text-red-500 mt-1">{{ new_location.location_type.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+        <button type="button" onclick="closeCreateLocationModal()" class="text-sm text-gray-500 hover:text-gray-700 transition">Cancelar</button>
+        <button type="submit" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          Salvar endereço
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

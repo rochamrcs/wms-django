@@ -5,10 +5,13 @@
 
 {% block content %}
 <div class="flex items-center justify-between mb-6">
-  <div>
-    <h2 class="text-xl font-bold text-gray-800">Posições cadastradas</h2>
-    <p class="text-sm text-gray-500 mt-1">Consulte a capacidade e o status de cada posição.</p>
-  </div>
+  <button type="button" onclick="openCreateLocationModal()"
+     class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition shadow-sm">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+    </svg>
+    Novo Endereço
+  </button>
 </div>
 
 <form method="GET" class="mb-4">
@@ -83,4 +86,37 @@
     </table>
   </div>
 </div>
+
+{% include "new_locations.html" with modal_open=False %}
+
+<script>
+const createLocationModal = document.getElementById('create-location-modal')
+
+function openCreateLocationModal() {
+  createLocationModal.classList.remove('hidden')
+  createLocationModal.classList.add('flex')
+  document.body.classList.add('overflow-hidden')
+  createLocationModal.querySelector('input, select').focus()
+}
+
+function closeCreateLocationModal() {
+  createLocationModal.classList.add('hidden')
+  createLocationModal.classList.remove('flex')
+  document.body.classList.remove('overflow-hidden')
+}
+
+createLocationModal.addEventListener('click', (event) => {
+  if (event.target === createLocationModal) {
+    closeCreateLocationModal()
+  }
+})
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeCreateLocationModal()
+  }
+})
+
+</script>
+
 {% endblock %}
